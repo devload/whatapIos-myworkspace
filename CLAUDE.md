@@ -22,7 +22,7 @@ whatapIos-myworkspace/
 │
 ├── # Testing & QA
 ├── whatap-ios-qa-guide/           (devload) iOS QA 가이드 문서
-├── ios-sample-apps/               (devload) iOS 샘플 앱 모음
+├── ios-sample-apps/               (devload) iOS 샘플 앱 모음 (8개)
 ├── webview-sample-ios-whatap/     (devload) WebView 모니터링 샘플
 ├── ios-simulator-tools/           (devload) 시뮬레이터 제어 도구
 ├── ios-device-list/               (devload) Apple 디바이스 목록
@@ -41,7 +41,6 @@ whatapIos-myworkspace/
 - whatap org 레포는 push 시 조직 권한 필요
 - devload 레포는 개인 소유 — 자유롭게 push 가능
 - `docs/`는 submodule이 아닌 일반 디렉토리
-- 새 프로젝트 추가: `git submodule add https://github.com/{org}/{repo}.git {name}`
 
 ## iOS Agent 개발 환경
 
@@ -58,23 +57,51 @@ whatapIos-myworkspace/
 
 ### iOS Agent 빌드
 
+```
+iosAgent/
+├── WhatapAgent.xcodeproj    ← Xcode 프로젝트
+├── WhatapAgent/              ← Agent 소스 코드
+├── PLCrashReporter/          ← 크래시 리포터
+├── TestApps/                 ← 내장 테스트 앱
+├── scripts/                  ← 빌드 스크립트
+└── Package.swift             ← SPM 지원
+```
+
 ```bash
 cd iosAgent
-# Makefile 기반 빌드
-make build        # 빌드
-make clean        # 클린 빌드
 
-# 또는 Xcode
+# Xcode 빌드
 xcodebuild -project WhatapAgent.xcodeproj -scheme WhatapAgent -configuration Release
+
+# XCFramework 빌드
+./scripts/build-xcframework-integrated.sh
+
+# QA 릴리즈 빌드
+./scripts/build-qa-release.sh
 ```
 
 ### 릴리즈 바이너리
 
 ```
 WhatapIOSAgent-Release/
-├── WhatapAgent.xcframework     ← 최종 배포 바이너리
-├── WhatapAgent.podspec         ← CocoaPods 배포 스펙
-└── Package.swift               ← SPM 배포 스펙
+├── Package.swift     ← SPM 배포 스펙
+└── README.md
+```
+
+### 핵심 개발 워크플로우
+
+```
+1. Agent 소스 수정 (iosAgent/)
+   ↓
+2. XCFramework 빌드 (./scripts/build-xcframework-integrated.sh)
+   ↓
+3. 샘플 앱에 적용 (ios-sample-apps/ 또는 webview-sample-ios-whatap/)
+   ↓
+4. 시뮬레이터에서 테스트 (/sim-run)
+   ↓
+5. WhatAp 로그 확인 (/sim-logs)
+   ↓
+6. WhatAp 대시보드에서 데이터 확인
 ```
 
 ### dSYM Symbolication 플로우
@@ -82,9 +109,9 @@ WhatapIOSAgent-Release/
 ```
 1. Xcode Archive → dSYM 파일 추출
 2. atosw-rust: dSYM → .atosw 변환 (경량화)
-   $ cd atosw-rust && cargo run -- convert /path/to/app.dSYM -o output.atosw
+   $ cd atosw-rust && cargo run -- build --dsym MyApp.dSYM --output MyApp.atosw
 3. atosw-kotlin: .atosw 파일 기반 주소 → 심볼 변환
-4. whatap-stack-repository: REST API로 디코딩 서비스 제공
+4. whatap-stack-repository: REST API로 디코딩 서비스 제공 (:8090)
 ```
 
 ### 시뮬레이터 테스트
@@ -93,11 +120,10 @@ WhatapIOSAgent-Release/
 # 사용 가능한 시뮬레이터 목록
 xcrun simctl list devices available
 
-# 샘플 앱 빌드 & 실행 (시뮬레이터)
-cd ios-sample-apps/<app-name>
-xcodebuild -project *.xcodeproj -scheme <scheme> \
-  -destination 'platform=iOS Simulator,name=iPhone 15' \
-  build
+# 샘플 앱 빌드 & 실행
+cd ios-sample-apps/Complex-Apps/ECommerceApp
+xcodebuild -project *.xcodeproj -scheme ECommerceApp \
+  -destination 'platform=iOS Simulator,name=iPhone 16' build
 
 # WhatAp 로그 확인
 xcrun simctl spawn booted log stream --predicate 'subsystem == "io.whatap"' --level debug
@@ -107,18 +133,16 @@ xcrun simctl spawn booted log stream --predicate 'subsystem == "io.whatap"' --le
 
 ```bash
 cd whatap-mobile-proxy-server
-npm install && npm start
-# http://localhost:6600 에서 프록시 서버 실행
-# iOS Agent의 서버 주소를 프록시로 변경하여 데이터 확인 가능
+npm install && npm start    # :6600
 ```
 
-## Claude Code Slash Commands
+## 슬래시 명령 (Claude Code)
 
-| 명령어 | 설명 |
-|--------|------|
+| 명령 | 기능 |
+|------|------|
 | `/build-agent` | iOS Agent 빌드 (debug/release/clean) |
 | `/sim-run` | 시뮬레이터에서 샘플 앱 빌드 & 실행 |
-| `/sim-logs` | 시뮬레이터/디바이스 WhatAp 관련 로그 확인 |
+| `/sim-logs` | 시뮬레이터/디바이스 WhatAp 로그 확인 |
 | `/dsym-convert` | dSYM → .atosw 변환 |
 | `/worktree-status` | Git worktree 상태 확인 |
 | `/proxy-server` | 모바일 프록시 서버 시작/중지 |
