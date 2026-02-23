@@ -1,0 +1,42 @@
+[submodule "iosAgent"]
+	path = iosAgent
+	url = https://github.com/whatap/iosAgent.git
+[submodule "WhatapIOSAgent-Release"]
+	path = WhatapIOSAgent-Release
+	url = https://github.com/whatap/WhatapIOSAgent-Release.git
+[submodule "whatap-mobile-agent-spec"]
+	path = whatap-mobile-agent-spec
+	url = https://github.com/whatap/whatap-mobile-agent-spec.git
+[submodule "demo-generator"]
+	path = demo-generator
+	url = https://github.com/whatap/mobile_demoGenerator.git
+[submodule "whatap-mobile-proxy-server"]
+	path = whatap-mobile-proxy-server
+	url = https://github.com/whatap/whatap-mobile-proxy-server.git
+[submodule "atosw"]
+	path = atosw
+	url = https://github.com/whatap/atosw.git
+[submodule "atosw-kotlin"]
+	path = atosw-kotlin
+	url = https://github.com/whatap/atosw-kotlin.git
+[submodule "atosw-rust"]
+	path = atosw-rust
+	url = https://github.com/whatap/atosw-rust.git
+[submodule "whatap-stack-repository"]
+	path = whatap-stack-repository
+	url = https://github.com/whatap/whatap-stack-repository.git
+[submodule "whatap-ios-qa-guide"]
+	path = whatap-ios-qa-guide
+	url = https://github.com/devload/whatap-ios-qa-guide.git
+[submodule "webview-sample-ios-whatap"]
+	path = webview-sample-ios-whatap
+	url = https://github.com/devload/webview-sample-ios-whatap.git
+[submodule "ios-sample-apps"]
+	path = ios-sample-apps
+	url = https://github.com/devload/ios-sample-apps.git
+[submodule "ios-simulator-tools"]
+	path = ios-simulator-tools
+	url = https://github.com/devload/ios-simulator-tools.git
+[submodule "ios-device-list"]
+	path = ios-device-list
+	url = https://github.com/devload/ios-device-list.git

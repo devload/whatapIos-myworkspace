@@ -1,0 +1,52 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+xcuserdata/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Build outputs
+dist/
+build/
+target/
+*.zip
+DerivedData/
+
+# iOS / Xcode
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.app
+*.framework
+*.xcframework
+
+# Swift
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+
+# Rust
+target/
+
+# Java/Kotlin/Gradle
+*.class
+.gradle/
+
+# CocoaPods
+Pods/
+
+# Secrets (never commit)
+.env
+.env.local
+*.pem
+*.key
+credentials.json
