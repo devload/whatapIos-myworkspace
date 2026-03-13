@@ -1,0 +1,370 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A673DCFBC14E2ECC46E319D /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D729369B80C2BEC29C4533D /* HomeViewController.swift */; };
+		42BDFAA1DEFF29CE35D0B132 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C64A7BF85910E6E7F5AFAF /* ProfileViewController.swift */; };
+		43F217FD0EBB2341B79EBF17 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C3152AAEAD24CCD5FBC95C /* SceneDelegate.swift */; };
+		5395298B88B7A1D72FC4C4FF /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E53ACA13D864034131A1B8 /* ProductsViewController.swift */; };
+		874428EC819844CA7E9B8DA2 /* WhatapSessionSnapshot in Frameworks */ = {isa = PBXBuildFile; productRef = DCBD6FC3758F3C8856D58243 /* WhatapSessionSnapshot */; };
+		888F13312991348DC99DB97B /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE3E4253D8D7E5B4B547F70 /* MainTabBarController.swift */; };
+		913E8A809533E2E636863ADA /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909061941000DC9EA6BC6DF9 /* SettingsViewController.swift */; };
+		99E3C29EA1650577BF92E200 /* WhatapSessionRecorder in Frameworks */ = {isa = PBXBuildFile; productRef = 9E58168A1E054EC934C4DBA8 /* WhatapSessionRecorder */; };
+		CADA45141BDC7E3F9EFB9FD5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A57692A39860A6F799E2D6 /* AppDelegate.swift */; };
+		CB429C424BB84C08E7CEE91F /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28696769CC94542D661CA168 /* MessagesViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0BE3E4253D8D7E5B4B547F70 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		28696769CC94542D661CA168 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		3D729369B80C2BEC29C4533D /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		40E53ACA13D864034131A1B8 /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
+		46A57692A39860A6F799E2D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		759BD650A7DF57ACCBA12D9A /* WhatapSessionRecorder */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WhatapSessionRecorder; path = ../WhatapSessionRecorder; sourceTree = SOURCE_ROOT; };
+		909061941000DC9EA6BC6DF9 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		95C64A7BF85910E6E7F5AFAF /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		B24853B383CE160E8EB5FF8E /* SessionReplaySample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SessionReplaySample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD796A62E711E52EC261FA31 /* WhatapSessionSnapshot */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WhatapSessionSnapshot; path = ../WhatapSessionSnapshot; sourceTree = SOURCE_ROOT; };
+		F3C3152AAEAD24CCD5FBC95C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DF714B3E3B24AAB2EA032CF4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				874428EC819844CA7E9B8DA2 /* WhatapSessionSnapshot in Frameworks */,
+				99E3C29EA1650577BF92E200 /* WhatapSessionRecorder in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		61571A8B0CC51A3292D06F20 = {
+			isa = PBXGroup;
+			children = (
+				8F0B4C530BC65F684C8601EE /* Packages */,
+				D697A68ECC991AD29E096FAD /* SessionReplaySample */,
+				723A86D952CBB7300CC25AB7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		723A86D952CBB7300CC25AB7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B24853B383CE160E8EB5FF8E /* SessionReplaySample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8F0B4C530BC65F684C8601EE /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				759BD650A7DF57ACCBA12D9A /* WhatapSessionRecorder */,
+				BD796A62E711E52EC261FA31 /* WhatapSessionSnapshot */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		D697A68ECC991AD29E096FAD /* SessionReplaySample */ = {
+			isa = PBXGroup;
+			children = (
+				46A57692A39860A6F799E2D6 /* AppDelegate.swift */,
+				3D729369B80C2BEC29C4533D /* HomeViewController.swift */,
+				0BE3E4253D8D7E5B4B547F70 /* MainTabBarController.swift */,
+				28696769CC94542D661CA168 /* MessagesViewController.swift */,
+				40E53ACA13D864034131A1B8 /* ProductsViewController.swift */,
+				95C64A7BF85910E6E7F5AFAF /* ProfileViewController.swift */,
+				F3C3152AAEAD24CCD5FBC95C /* SceneDelegate.swift */,
+				909061941000DC9EA6BC6DF9 /* SettingsViewController.swift */,
+			);
+			path = SessionReplaySample;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A115A875749CF52F3C491EAA /* SessionReplaySample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9A53B123D3D9E82DA28B6659 /* Build configuration list for PBXNativeTarget "SessionReplaySample" */;
+			buildPhases = (
+				2337278A9FBF243C6324228E /* Sources */,
+				DF714B3E3B24AAB2EA032CF4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SessionReplaySample;
+			packageProductDependencies = (
+				DCBD6FC3758F3C8856D58243 /* WhatapSessionSnapshot */,
+				9E58168A1E054EC934C4DBA8 /* WhatapSessionRecorder */,
+			);
+			productName = SessionReplaySample;
+			productReference = B24853B383CE160E8EB5FF8E /* SessionReplaySample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7952160E83CD5798D1385B15 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A115A875749CF52F3C491EAA = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = B1BF003B7665C7D7DD82DB41 /* Build configuration list for PBXProject "SessionReplaySample" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 61571A8B0CC51A3292D06F20;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				75DF4FE10FA3DF1C77E820E9 /* XCLocalSwiftPackageReference "../WhatapSessionRecorder" */,
+				40FCD8D04B4B80DD80294EC8 /* XCLocalSwiftPackageReference "../WhatapSessionSnapshot" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A115A875749CF52F3C491EAA /* SessionReplaySample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2337278A9FBF243C6324228E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CADA45141BDC7E3F9EFB9FD5 /* AppDelegate.swift in Sources */,
+				0A673DCFBC14E2ECC46E319D /* HomeViewController.swift in Sources */,
+				888F13312991348DC99DB97B /* MainTabBarController.swift in Sources */,
+				CB429C424BB84C08E7CEE91F /* MessagesViewController.swift in Sources */,
+				5395298B88B7A1D72FC4C4FF /* ProductsViewController.swift in Sources */,
+				42BDFAA1DEFF29CE35D0B132 /* ProfileViewController.swift in Sources */,
+				43F217FD0EBB2341B79EBF17 /* SceneDelegate.swift in Sources */,
+				913E8A809533E2E636863ADA /* SettingsViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		219AD4207ACA8EC423EFF337 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = SessionReplaySample;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		2C953B78DEEF0BF0A34D8AAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = NO;
+				INFOPLIST_FILE = SessionReplaySample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.whatap.sessionreplay;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		438E0F09B6FDBC7A8FB84E19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = SessionReplaySample;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		5F9118BED4CDA3C7086BF1A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = NO;
+				INFOPLIST_FILE = SessionReplaySample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.whatap.sessionreplay;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9A53B123D3D9E82DA28B6659 /* Build configuration list for PBXNativeTarget "SessionReplaySample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F9118BED4CDA3C7086BF1A3 /* Debug */,
+				2C953B78DEEF0BF0A34D8AAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B1BF003B7665C7D7DD82DB41 /* Build configuration list for PBXProject "SessionReplaySample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				438E0F09B6FDBC7A8FB84E19 /* Debug */,
+				219AD4207ACA8EC423EFF337 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		40FCD8D04B4B80DD80294EC8 /* XCLocalSwiftPackageReference "../WhatapSessionSnapshot" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../WhatapSessionSnapshot;
+		};
+		75DF4FE10FA3DF1C77E820E9 /* XCLocalSwiftPackageReference "../WhatapSessionRecorder" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../WhatapSessionRecorder;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9E58168A1E054EC934C4DBA8 /* WhatapSessionRecorder */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WhatapSessionRecorder;
+		};
+		DCBD6FC3758F3C8856D58243 /* WhatapSessionSnapshot */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WhatapSessionSnapshot;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 7952160E83CD5798D1385B15 /* Project object */;
+}

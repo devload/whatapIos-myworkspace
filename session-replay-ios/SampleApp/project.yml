@@ -1,0 +1,39 @@
+name: SessionReplaySample
+options:
+  bundleIdPrefix: io.whatap.sessionreplay
+  deploymentTarget:
+    iOS: "13.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    PRODUCT_NAME: SessionReplaySample
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "13.0"
+
+targets:
+  SessionReplaySample:
+    type: application
+    platform: iOS
+    sources:
+      - path: SessionReplaySample
+        excludes:
+          - Info.plist
+    settings:
+      base:
+        INFOPLIST_FILE: SessionReplaySample/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: io.whatap.sessionreplay
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_PREVIEWS: NO
+    dependencies:
+      - package: WhatapSessionSnapshot
+        link: true
+      - package: WhatapSessionRecorder
+        link: true
+
+packages:
+  WhatapSessionSnapshot:
+    path: ../WhatapSessionSnapshot
+  WhatapSessionRecorder:
+    path: ../WhatapSessionRecorder
