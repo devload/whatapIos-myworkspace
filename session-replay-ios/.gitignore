@@ -1,0 +1,17 @@
+# Build
+.build/
+build/
+DerivedData/
+
+# Node
+node_modules/
+
+# Session data (large JSON files)
+server/session-data/*.json
+
+# OS
+.DS_Store
+
+# IDE
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/

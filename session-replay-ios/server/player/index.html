@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Replay Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #4da6ff;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        button {
+            background: #4da6ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #3d8acc;
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 16px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #4da6ff;
+        }
+
+        .session-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .session-item {
+            background: #1a1a2e;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .session-item:hover {
+            background: #252547;
+        }
+
+        .session-item.active {
+            background: #4da6ff;
+            color: white;
+        }
+
+        .session-item .id {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .session-item .info {
+            font-size: 14px;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .device-frame {
+            background: transparent;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .device-screen {
+            background: white;
+            border-radius: 0;  /* No rounded corners - match iOS screenshot exactly */
+            overflow: hidden;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #000;  /* Override body's white color for proper text rendering */
+            /* Force crisp edges without anti-aliasing */
+            -webkit-font-smoothing: none;
+            image-rendering: pixelated;
+            box-shadow: 0 0 0 1px white;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .view-node {
+            position: absolute;
+        }
+
+        .view-node.debug {
+            border: 1px dashed rgba(255, 0, 0, 0.3);
+        }
+
+        .view-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        .view-label.multiline {
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* UISwitch simulation */
+        .switch-container {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .switch-track {
+            width: 51px;
+            height: 31px;
+            border-radius: 15.5px;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .switch-thumb {
+            width: 27px;
+            height: 27px;
+            border-radius: 13.5px;
+            background: white;
+            position: absolute;
+            top: 2px;
+            transition: left 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .switch-on .switch-track {
+            background: #34C759;
+        }
+
+        .switch-on .switch-thumb {
+            left: 22px;
+        }
+
+        .switch-off .switch-track {
+            background: #E9E9EA;
+        }
+
+        .switch-off .switch-thumb {
+            left: 2px;
+        }
+
+        /* UISlider simulation */
+        .slider-container {
+            position: absolute;
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-track {
+            height: 4px;
+            background: #E5E5EA;
+            border-radius: 2px;
+        }
+
+        .slider-fill {
+            height: 4px;
+            background: #007AFF;
+            border-radius: 2px;
+        }
+
+        .slider-thumb {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* UIProgressView simulation */
+        .progress-container {
+            position: absolute;
+            display: flex;
+            align-items: center;
+        }
+
+        .progress-track {
+            height: 4px;
+            background: #E5E5EA;
+            border-radius: 2px;
+        }
+
+        .progress-fill {
+            height: 4px;
+            background: #007AFF;
+            border-radius: 2px;
+        }
+
+        /* UIActivityIndicatorView simulation */
+        .activity-indicator {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #C7C7CC;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+        }
+
+        .activity-indicator.animating {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .playback-controls {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .timeline {
+            flex: 1;
+            height: 8px;
+            background: #1a1a2e;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .timeline-progress {
+            height: 100%;
+            background: #4da6ff;
+            border-radius: 4px;
+            width: 0%;
+        }
+
+        .time-display {
+            font-family: monospace;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .snapshot-info {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .snapshot-info h3 {
+            font-size: 14px;
+            color: #4da6ff;
+            margin-bottom: 8px;
+        }
+
+        .snapshot-info pre {
+            background: #1a1a2e;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            overflow-x: auto;
+            max-height: 150px;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: #888;
+        }
+
+        .debug-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .debug-toggle input {
+            width: 16px;
+            height: 16px;
+        }
+
+        .accuracy-panel {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .accuracy-panel h3 {
+            font-size: 14px;
+            color: #4da6ff;
+            margin-bottom: 12px;
+        }
+
+        .accuracy-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #4da6ff;
+        }
+
+        .accuracy-score.good { color: #4caf50; }
+        .accuracy-score.medium { color: #ff9800; }
+        .accuracy-score.bad { color: #f44336; }
+
+        .accuracy-details {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .view-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .stat-item {
+            background: #1a1a2e;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-item .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4da6ff;
+        }
+
+        .stat-item .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Session Replay Player</h1>
+            <div class="controls">
+                <label class="debug-toggle">
+                    <input type="checkbox" id="debugMode">
+                    Debug Mode
+                </label>
+                <button onclick="loadSessions()">Refresh</button>
+                <button onclick="measureAccuracy()">Measure Accuracy</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2>Sessions</h2>
+                <div class="session-list" id="sessionList">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+
+            <div class="preview-container">
+                <div class="device-frame">
+                    <div class="device-screen" id="deviceScreen" style="width: 375px; height: 812px;">
+                        <div class="loading">Select a session to replay</div>
+                    </div>
+                </div>
+
+                <div class="playback-controls">
+                    <button id="playBtn" onclick="togglePlay()">Play</button>
+                    <button onclick="prevSnapshot()">Prev</button>
+                    <button onclick="nextSnapshot()">Next</button>
+                    <div class="timeline" onclick="seekTimeline(event)">
+                        <div class="timeline-progress" id="timelineProgress"></div>
+                    </div>
+                    <span class="time-display" id="timeDisplay">0 / 0</span>
+                </div>
+
+                <div class="accuracy-panel">
+                    <h3>Accuracy Score</h3>
+                    <div class="accuracy-score" id="accuracyScore">--</div>
+                    <div class="accuracy-details" id="accuracyDetails">
+                        Click "Measure Accuracy" to analyze
+                    </div>
+                    <div class="view-stats" id="viewStats" style="display:none;">
+                        <div class="stat-item">
+                            <div class="value" id="totalViews">0</div>
+                            <div class="label">Total Views</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value" id="capturedProps">0</div>
+                            <div class="label">Captured Props</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value" id="missingProps">0</div>
+                            <div class="label">Missing Props</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="snapshot-info">
+                    <h3>Current Snapshot Data</h3>
+                    <pre id="snapshotData">No snapshot selected</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessions = [];
+        let currentSession = null;
+        let snapshots = [];
+        let currentIndex = 0;
+        let isPlaying = false;
+        let playInterval = null;
+
+        const API_BASE = window.location.origin;
+
+        // iOS System Colors
+        const systemColors = {
+            systemBlue: '#007AFF',
+            systemGreen: '#34C759',
+            systemIndigo: '#5856D6',
+            systemOrange: '#FF9500',
+            systemPink: '#FF2D55',
+            systemPurple: '#AF52DE',
+            systemRed: '#FF3B30',
+            systemTeal: '#5AC8FA',
+            systemYellow: '#FFCC00',
+            systemGray: '#8E8E93',
+            systemGray2: '#AEAEB2',
+            systemGray3: '#C7C7CC',
+            systemGray4: '#D1D1D6',
+            systemGray5: '#E5E5EA',
+            systemGray6: '#F2F2F7',
+            systemBackground: '#FFFFFF',
+            secondarySystemBackground: '#F2F2F7',
+            tertiarySystemBackground: '#FFFFFF',
+            label: '#000000',
+            secondaryLabel: '#3C3C4399',
+            tertiaryLabel: '#3C3C434D',
+            quaternaryLabel: '#3C3C4328',
+        };
+
+        async function loadSessions() {
+            try {
+                const response = await fetch(`${API_BASE}/api/sessions`);
+                sessions = await response.json();
+                renderSessionList();
+            } catch (error) {
+                console.error('Failed to load sessions:', error);
+                document.getElementById('sessionList').innerHTML = '<div class="loading">Failed to load sessions</div>';
+            }
+        }
+
+        function renderSessionList() {
+            const container = document.getElementById('sessionList');
+
+            if (sessions.length === 0) {
+                container.innerHTML = '<div class="loading">No sessions recorded</div>';
+                return;
+            }
+
+            container.innerHTML = sessions.map(session => `
+                <div class="session-item ${currentSession?.sessionId === session.sessionId ? 'active' : ''}"
+                     onclick="selectSession('${session.sessionId}')">
+                    <div class="id">${session.sessionId.substring(0, 8)}...</div>
+                    <div class="info">${session.eventCount} events</div>
+                </div>
+            `).join('');
+        }
+
+        async function selectSession(sessionId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/sessions/${sessionId}/replay`);
+                const data = await response.json();
+
+                currentSession = data;
+                snapshots = data.snapshots;
+                currentIndex = 0;
+
+                renderSessionList();
+
+                if (snapshots.length > 0) {
+                    renderSnapshot(snapshots[0]);
+                    updatePlaybackUI();
+                }
+            } catch (error) {
+                console.error('Failed to load session:', error);
+            }
+        }
+
+        function renderSnapshot(snapshot) {
+            const screen = document.getElementById('deviceScreen');
+            const debugMode = document.getElementById('debugMode').checked;
+
+            const data = snapshot.data;
+            const scale = data.scale || 1;
+            const screenWidth = data.screenWidth || 375;
+            const screenHeight = data.screenHeight || 812;
+
+            screen.style.width = `${screenWidth}px`;
+            screen.style.height = `${screenHeight}px`;
+            screen.innerHTML = '';
+
+            if (data.root) {
+                // Pass parent bounds as {left: 0, top: 0} for root element
+                renderView(screen, data.root, debugMode, { left: 0, top: 0 });
+            }
+
+            document.getElementById('snapshotData').textContent = JSON.stringify(data, null, 2);
+        }
+
+        function renderView(container, view, debugMode, parentBounds) {
+            const div = document.createElement('div');
+            div.className = 'view-node' + (debugMode ? ' debug' : '');
+
+            const bounds = view.bounds || {};
+            
+            // Calculate relative position (subtract parent's position)
+            const relativeLeft = (bounds.left || 0) - (parentBounds.left || 0);
+            const relativeTop = (bounds.top || 0) - (parentBounds.top || 0);
+
+            div.style.left = `${relativeLeft}px`;
+            div.style.top = `${relativeTop}px`;
+            div.style.width = `${(bounds.right || 0) - (bounds.left || 0)}px`;
+            div.style.height = `${(bounds.bottom || 0) - (bounds.top || 0)}px`;
+
+            // Background color
+            if (view.backgroundColor) {
+                div.style.backgroundColor = resolveColor(view.backgroundColor);
+            }
+
+            // Alpha
+            if (view.alpha !== undefined && view.alpha < 1) {
+                div.style.opacity = view.alpha;
+            }
+
+            // Corner radius
+            if (view.cornerRadius) {
+                div.style.borderRadius = `${view.cornerRadius}px`;
+            }
+
+            // Border
+            if (view.border && view.border.width > 0) {
+                div.style.border = `${view.border.width}px solid ${resolveColor(view.border.color)}`;
+            }
+
+            // Shadow - adjust parameters for iOS-like rendering
+            if (view.shadow) {
+                let shadowColor = view.shadow.color || '#000000';
+                let shadowOpacity = view.shadow.opacity !== undefined ? view.shadow.opacity : 1;
+                
+                // Convert color to rgba with shadow opacity
+                const resolved = resolveColor(shadowColor);
+                if (resolved.startsWith('#') && resolved.length === 7) {
+                    const r = parseInt(resolved.slice(1, 3), 16);
+                    const g = parseInt(resolved.slice(3, 5), 16);
+                    const b = parseInt(resolved.slice(5, 7), 16);
+                    shadowColor = `rgba(${r}, ${g}, ${b}, ${shadowOpacity})`;
+                } else if (resolved.startsWith('#') && resolved.length === 9) {
+                    const r = parseInt(resolved.slice(1, 3), 16);
+                    const g = parseInt(resolved.slice(3, 5), 16);
+                    const b = parseInt(resolved.slice(5, 7), 16);
+                    const a = parseInt(resolved.slice(7, 9), 16) / 255;
+                    shadowColor = `rgba(${r}, ${g}, ${b}, ${a * shadowOpacity})`;
+                } else if (resolved.startsWith('rgba')) {
+                    shadowColor = resolved;
+                }
+                
+                // CSS box-shadow blur spreads more than iOS CALayer shadow
+                // Reduce radius and opacity to match iOS shadow appearance
+                const adjustedRadius = Math.max(0, view.shadow.radius * 0.27);
+                const adjustedOpacity = shadowOpacity * 0.27;
+                
+                // Rebuild shadow color with adjusted opacity
+                if (resolved.startsWith('#') && resolved.length === 7) {
+                    const r = parseInt(resolved.slice(1, 3), 16);
+                    const g = parseInt(resolved.slice(3, 5), 16);
+                    const b = parseInt(resolved.slice(5, 7), 16);
+                    shadowColor = `rgba(${r}, ${g}, ${b}, ${adjustedOpacity})`;
+                } else if (resolved.startsWith('#') && resolved.length === 9) {
+                    const r = parseInt(resolved.slice(1, 3), 16);
+                    const g = parseInt(resolved.slice(3, 5), 16);
+                    const b = parseInt(resolved.slice(5, 7), 16);
+                    const a = parseInt(resolved.slice(7, 9), 16) / 255;
+                    shadowColor = `rgba(${r}, ${g}, ${b}, ${a * adjustedOpacity})`;
+                }
+                
+                div.style.boxShadow = `${view.shadow.offsetWidth}px ${view.shadow.offsetHeight}px ${adjustedRadius}px ${shadowColor}`;
+            }
+
+            // Clips to bounds
+            if (view.clipsToBounds || view.masksToBounds) {
+                div.style.overflow = 'hidden';
+            }
+
+            // Handle special view types
+            const baseType = view.baseType || '';
+
+            // UISwitch
+            if (baseType === 'UISwitch') {
+                renderSwitch(div, view);
+            }
+            // UISlider
+            else if (baseType === 'UISlider') {
+                renderSlider(div, view);
+            }
+            // UIProgressView
+            else if (baseType === 'UIProgressView') {
+                renderProgress(div, view);
+            }
+            // UIActivityIndicatorView
+            else if (baseType === 'UIActivityIndicatorView') {
+                renderActivityIndicator(div, view);
+            }
+            // Text views
+            else if (view.text !== undefined && view.text !== null) {
+                renderText(div, view);
+            }
+            // Placeholder for text fields
+            else if (view.placeholder && !view.text) {
+                renderPlaceholder(div, view);
+            }
+            // UIImageView placeholder - show a colored placeholder for images
+            else if (baseType === 'UIImageView' && view.hasImage && !view.children?.length) {
+                const imgWidth = (bounds.right - bounds.left) || 30;
+                const imgHeight = (bounds.bottom - bounds.top) || 30;
+                
+                // Show placeholder with tintColor or transparent
+                if (view.imageTintColor) {
+                    // For tinted icons (SF Symbols), we can't render them
+                    // Make the placeholder very subtle to minimize visual impact
+                    const iconSize = Math.min(imgWidth, imgHeight) * 0.6;
+                    div.style.display = 'flex';
+                    div.style.justifyContent = 'center';
+                    div.style.alignItems = 'center';
+                    
+                    // Create subtle rounded icon placeholder
+                    const icon = document.createElement('div');
+                    icon.style.width = `${iconSize}px`;
+                    icon.style.height = `${iconSize}px`;
+                    const color = resolveColor(view.imageTintColor);
+                    // Use very low opacity to minimize difference
+                    icon.style.backgroundColor = color;
+                    icon.style.borderRadius = '50%';
+                    icon.style.opacity = '0.15';
+                    div.appendChild(icon);
+                } else {
+                    // No tintColor - make it transparent instead of gray
+                    // This handles generic image views better
+                    div.style.backgroundColor = 'transparent';
+                }
+                
+                // Add corner radius if present
+                if (view.cornerRadius) {
+                    div.style.borderRadius = `${view.cornerRadius}px`;
+                }
+            }
+
+            // Render children
+            if (view.children && view.children.length > 0) {
+                view.children.forEach(child => renderView(div, child, debugMode, bounds));
+            }
+
+            container.appendChild(div);
+        }
+
+        function renderText(div, view) {
+            const label = document.createElement('span');
+            label.className = 'view-label';
+
+            // Handle secure text entry
+            let text = view.text || '';
+            if (view.isSecureTextEntry) {
+                text = '\u2022'.repeat(text.length);
+            }
+            label.textContent = text;
+
+            // Font size
+            if (view.textSize) {
+                label.style.fontSize = `${view.textSize}px`;
+            }
+
+            // Text color
+            if (view.textColor) {
+                label.style.color = resolveColor(view.textColor);
+            }
+
+            // Font weight
+            if (view.fontWeight) {
+                label.style.fontWeight = view.fontWeight;
+            }
+
+            // Font family - use system font for consistency
+            // Ignore fontFamily and use -apple-system for better iOS match
+            label.style.fontFamily = "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif";
+
+            // Text alignment
+            if (view.textAlignment) {
+                label.style.textAlign = view.textAlignment;
+                if (view.textAlignment === 'center') {
+                    div.style.justifyContent = 'center';
+                } else if (view.textAlignment === 'right') {
+                    div.style.justifyContent = 'flex-end';
+                }
+            }
+
+            // Number of lines
+            if (view.numberOfLines === 0) {
+                label.classList.add('multiline');
+            } else if (view.numberOfLines && view.numberOfLines > 0) {
+                label.style.display = '-webkit-box';
+                label.style.webkitLineClamp = view.numberOfLines;
+                label.style.webkitBoxOrient = 'vertical';
+                label.style.overflow = 'hidden';
+            }
+
+            // Line break mode
+            if (view.lineBreakMode === 'truncateHead') {
+                label.style.textOverflow = 'ellipsis';
+            }
+
+            div.appendChild(label);
+        }
+
+        function renderPlaceholder(div, view) {
+            const label = document.createElement('span');
+            label.className = 'view-label';
+            label.textContent = view.placeholder;
+            label.style.color = view.placeholderColor || '#C7C7CC';
+            label.style.fontSize = view.textSize ? `${view.textSize}px` : '14px';
+
+            div.appendChild(label);
+        }
+
+        function renderSwitch(div, view) {
+            div.classList.add('switch-container');
+            div.style.justifyContent = 'center';
+
+            const switchEl = document.createElement('div');
+            switchEl.className = view.isOn ? 'switch-on' : 'switch-off';
+
+            const track = document.createElement('div');
+            track.className = 'switch-track';
+
+            const thumb = document.createElement('div');
+            thumb.className = 'switch-thumb';
+
+            switchEl.appendChild(track);
+            switchEl.appendChild(thumb);
+            div.appendChild(switchEl);
+        }
+
+        function renderSlider(div, view) {
+            div.classList.add('slider-container');
+            div.style.justifyContent = 'center';
+
+            const width = (view.bounds.right - view.bounds.left) - 10;
+
+            const track = document.createElement('div');
+            track.className = 'slider-track';
+            track.style.width = `${width}px`;
+
+            const fill = document.createElement('div');
+            fill.className = 'slider-fill';
+
+            const min = view.minValue || 0;
+            const max = view.maxValue || 1;
+            const val = view.value || 0;
+            const percent = ((val - min) / (max - min)) * 100;
+            fill.style.width = `${percent}%`;
+
+            const thumb = document.createElement('div');
+            thumb.className = 'slider-thumb';
+            thumb.style.position = 'absolute';
+            thumb.style.left = `calc(${percent}% - 14px)`;
+
+            track.appendChild(fill);
+            div.appendChild(track);
+            div.appendChild(thumb);
+        }
+
+        function renderProgress(div, view) {
+            div.classList.add('progress-container');
+            div.style.justifyContent = 'center';
+
+            const width = (view.bounds.right - view.bounds.left);
+
+            const track = document.createElement('div');
+            track.className = 'progress-track';
+            track.style.width = `${width}px`;
+
+            const fill = document.createElement('div');
+            fill.className = 'progress-fill';
+            fill.style.width = `${(view.progress || 0) * 100}%`;
+
+            track.appendChild(fill);
+            div.appendChild(track);
+        }
+
+        function renderActivityIndicator(div, view) {
+            div.style.justifyContent = 'center';
+            div.style.alignItems = 'center';
+
+            const indicator = document.createElement('div');
+            indicator.className = 'activity-indicator';
+            if (view.isAnimating !== false) {
+                indicator.classList.add('animating');
+            }
+
+            div.appendChild(indicator);
+        }
+
+        function resolveColor(color) {
+            if (!color) return 'transparent';
+
+            // Check if it's a system color reference
+            if (systemColors[color]) {
+                return systemColors[color];
+            }
+
+            // Convert 8-char hex (#RRGGBBAA) to rgba()
+            if (color.length === 9 && color.startsWith('#')) {
+                const r = parseInt(color.slice(1, 3), 16);
+                const g = parseInt(color.slice(3, 5), 16);
+                const b = parseInt(color.slice(5, 7), 16);
+                const a = parseInt(color.slice(7, 9), 16) / 255;
+                return `rgba(${r}, ${g}, ${b}, ${a})`;
+            }
+
+            return color;
+        }
+
+        function updatePlaybackUI() {
+            const total = snapshots.length;
+            document.getElementById('timeDisplay').textContent = `${currentIndex + 1} / ${total}`;
+            document.getElementById('timelineProgress').style.width = `${((currentIndex + 1) / total) * 100}%`;
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                stopPlay();
+            } else {
+                startPlay();
+            }
+        }
+
+        function startPlay() {
+            if (snapshots.length === 0) return;
+
+            isPlaying = true;
+            document.getElementById('playBtn').textContent = 'Pause';
+
+            playInterval = setInterval(() => {
+                if (currentIndex < snapshots.length - 1) {
+                    nextSnapshot();
+                } else {
+                    stopPlay();
+                    currentIndex = 0;
+                }
+            }, 1000);
+        }
+
+        function stopPlay() {
+            isPlaying = false;
+            document.getElementById('playBtn').textContent = 'Play';
+
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+            }
+        }
+
+        function nextSnapshot() {
+            if (currentIndex < snapshots.length - 1) {
+                currentIndex++;
+                renderSnapshot(snapshots[currentIndex]);
+                updatePlaybackUI();
+            }
+        }
+
+        function prevSnapshot() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderSnapshot(snapshots[currentIndex]);
+                updatePlaybackUI();
+            }
+        }
+
+        function seekTimeline(event) {
+            if (snapshots.length === 0) return;
+
+            const timeline = event.currentTarget;
+            const rect = timeline.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            currentIndex = Math.floor(percent * snapshots.length);
+
+            renderSnapshot(snapshots[currentIndex]);
+            updatePlaybackUI();
+        }
+
+        function measureAccuracy() {
+            if (!currentSession || snapshots.length === 0) {
+                alert('Please select a session first');
+                return;
+            }
+
+            const scoreEl = document.getElementById('accuracyScore');
+            const detailsEl = document.getElementById('accuracyDetails');
+            const statsEl = document.getElementById('viewStats');
+
+            scoreEl.textContent = '...';
+            scoreEl.className = 'accuracy-score';
+            statsEl.style.display = 'none';
+
+            try {
+                const snapshot = snapshots[currentIndex];
+                const result = calculateAccuracy(snapshot);
+
+                scoreEl.textContent = result.accuracy + '%';
+
+                if (result.accuracy >= 95) {
+                    scoreEl.className = 'accuracy-score good';
+                } else if (result.accuracy >= 80) {
+                    scoreEl.className = 'accuracy-score medium';
+                } else {
+                    scoreEl.className = 'accuracy-score bad';
+                }
+
+                document.getElementById('totalViews').textContent = result.totalViews;
+                document.getElementById('capturedProps').textContent = result.capturedProps;
+                document.getElementById('missingProps').textContent = result.missingProps;
+                statsEl.style.display = 'grid';
+
+                detailsEl.innerHTML = `
+                    Capture Rate: ${result.captureRate}%<br>
+                    ${result.issues.length > 0 ? 'Issues: ' + result.issues.slice(0, 5).join(', ') : 'No major issues'}
+                `;
+            } catch (error) {
+                console.error('Accuracy measurement failed:', error);
+                scoreEl.textContent = 'Error';
+                detailsEl.textContent = error.message;
+            }
+        }
+
+        function calculateAccuracy(snapshot) {
+            const data = snapshot.data;
+            let totalViews = 0;
+            let totalProps = 0;
+            let capturedProps = 0;
+            let issues = [];
+
+            // Essential properties that should be captured
+            const essentialProps = ['bounds', 'backgroundColor', 'alpha'];
+            const textProps = ['text', 'textSize', 'textColor', 'textAlignment'];
+            const styleProps = ['cornerRadius', 'border', 'shadow'];
+            const controlProps = ['isOn', 'value', 'progress', 'isAnimating'];
+
+            function analyzeView(view, depth = 0) {
+                totalViews++;
+                const baseType = view.baseType || '';
+
+                // Essential properties
+                essentialProps.forEach(prop => {
+                    totalProps++;
+                    if (prop === 'alpha') {
+                        // Alpha always has value (default 1)
+                        capturedProps++;
+                    } else if (view[prop] !== undefined && view[prop] !== null) {
+                        capturedProps++;
+                    } else if (prop === 'backgroundColor') {
+                        // Background can be transparent
+                        capturedProps++;
+                    } else {
+                        issues.push(`${baseType || view.type}: missing ${prop}`);
+                    }
+                });
+
+                // Text views
+                if (['UILabel', 'UIButton', 'UITextField', 'UITextView'].includes(baseType)) {
+                    textProps.forEach(prop => {
+                        totalProps++;
+                        // Text-related views should have text properties
+                        if (view[prop] !== undefined && view[prop] !== null) {
+                            capturedProps++;
+                        }
+                    });
+                }
+
+                // Styled views
+                if (view.cornerRadius || view.border || view.shadow) {
+                    styleProps.forEach(prop => {
+                        totalProps++;
+                        if (view[prop] !== undefined && view[prop] !== null) {
+                            capturedProps++;
+                        }
+                    });
+                }
+
+                // Control views
+                if (['UISwitch', 'UISlider', 'UIProgressView', 'UIActivityIndicatorView'].includes(baseType)) {
+                    controlProps.forEach(prop => {
+                        totalProps++;
+                        if (view[prop] !== undefined && view[prop] !== null) {
+                            capturedProps++;
+                        } else if (prop === 'isAnimating') {
+                            // Default isAnimating is false
+                            capturedProps++;
+                        }
+                    });
+                }
+
+                // Check children
+                if (view.children) {
+                    view.children.forEach(child => analyzeView(child, depth + 1));
+                }
+            }
+
+            if (data.root) {
+                analyzeView(data.root);
+            }
+
+            const missingProps = totalProps - capturedProps;
+            const captureRate = totalProps > 0 ? ((capturedProps / totalProps) * 100).toFixed(1) : 100;
+            const accuracy = totalProps > 0 ? ((capturedProps / totalProps) * 100).toFixed(1) : 0;
+
+            return {
+                accuracy,
+                totalViews,
+                capturedProps,
+                missingProps,
+                captureRate,
+                issues
+            };
+        }
+
+        document.getElementById('debugMode').addEventListener('change', () => {
+            if (snapshots[currentIndex]) {
+                renderSnapshot(snapshots[currentIndex]);
+            }
+        });
+
+        loadSessions();
+    </script>
+</body>
+</html>
